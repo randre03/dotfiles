@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Language="en-US" Id="haskelly" Version="0.4.26" Publisher="UCL"/>
+    <DisplayName>Haskelly</DisplayName>
+    <Description xml:space="preserve">Complete support for casual and expert Haskell development.</Description>
+    <Tags>intero,haskell,highlight,snippets,stack,snippet,Haskell,__ext_.hs,__ext_.lhs,cabal,Cabal,__ext_.cabal</Tags>
+    <Categories>Languages,Snippets</Categories>
+    <GalleryFlags>Public</GalleryFlags>
+    <Badges></Badges>
+    <Properties>
+      <Property Id="Microsoft.VisualStudio.Code.Engine" Value="^1.5.0" />
+      <Property Id="Microsoft.VisualStudio.Code.ExtensionDependencies" Value="justusadam.language-haskell" />
+      
+        <Property Id="Microsoft.VisualStudio.Services.Links.Source" Value="https://github.com/haskelly-dev/Haskelly" />
+        <Property Id="Microsoft.VisualStudio.Services.Links.Getstarted" Value="https://github.com/haskelly-dev/Haskelly" />
+        
+          <Property Id="Microsoft.VisualStudio.Services.Links.GitHub" Value="https://github.com/haskelly-dev/Haskelly" />
+        
+      
+      <Property Id="Microsoft.VisualStudio.Services.Links.Support" Value="https://github.com/haskelly-dev/Haskelly/issues" />
+      
+      <Property Id="Microsoft.VisualStudio.Services.Branding.Color" Value="#8F4D8B" />
+      <Property Id="Microsoft.VisualStudio.Services.Branding.Theme" Value="dark" />
+      <Property Id="Microsoft.VisualStudio.Services.GitHubFlavoredMarkdown" Value="true" />
+      
+      
+    </Properties>
+    <License>extension/License.txt</License>
+    <Icon>extension/resources/icon.png</Icon>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Code"/>
+  </Installation>
+  <Dependencies/>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.Code.Manifest" Path="extension/package.json" Addressable="true" />
+    <Asset Type="Microsoft.VisualStudio.Services.Content.Details" Path="extension/README.md" Addressable="true" /><Asset Type="Microsoft.VisualStudio.Services.Content.License" Path="extension/License.txt" Addressable="true" /><Asset Type="Microsoft.VisualStudio.Services.Icons.Default" Path="extension/resources/icon.png" Addressable="true" />
+  </Assets>
+</PackageManifest>

@@ -1,0 +1,46 @@
+{
+	"name": "theme-spacemacs",
+	"displayName": "Spacemacs Theme",
+	"description": "Spacemacs Theme",
+	"version": "0.0.8",
+	"publisher": "dzannotti",
+	"engines": {
+		"vscode": "*"
+	},
+	"categories": [
+		"Themes"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dzannotti/vscode-theme-spacemacs/"
+	},
+	"bugs": "https://github.com/dzannotti/vscode-theme-spacemacs/issues",
+	"links": {
+		"getstarted": {
+			"uri": "https://github.com/dzannotti/vscode-theme-spacemacs/blob/master/README.md"
+		},
+		"support": {
+			"uri": "https://github.com/dzannotti/vscode-theme-spacemacs/issues"
+		}
+	},
+	"icon": "images/spacemacs.svg",
+	"galleryBanner": {
+		"color": "#0B1A2F",
+		"theme": "dark"
+	},
+	"public": true,
+	"contributes": {
+		"themes": [
+			{
+				"label": "Spacemacs",
+				"uiTheme": "vs-dark",
+				"path": "./themes/Spacemacs.tmTheme"
+			}
+		]
+	},
+	"__metadata": {
+		"id": "8bb9a37c-f942-4c13-b2ee-1f0b110d5138",
+		"publisherId": "f3764338-6fd9-45d3-be23-3da192e4db4b",
+		"publisherDisplayName": "dzannotti"
+	}
+}

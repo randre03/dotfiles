@@ -1,0 +1,14 @@
+{
+  "name": "vscode-spacemacs-generator",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Daniele Zannotti <d.zannotti@me.com>",
+  "license": "MIT",
+  "dependencies": {
+    "simple-plist": "0.0.4",
+    "yamljs": "^0.2.7"
+  }
+}

@@ -1,0 +1,65 @@
+@value colors: 'components/styles/colors.less';
+@value Error, ErrorFade from colors;
+@value LightDisabled, LightHover, LightSecondary from colors;
+@value Primary, PrimaryContrast, PrimaryLight, PrimaryLightFade from colors;
+
+/**
+ * This clears all the button's default styles
+ */
+    .color { width: 200px; height: 45px; color: #ffffff; display: flex; justify-content: center; align-items: center; margin-bottom: 3px; margin-right: 3px; text-align: center; }
+.row { display: flex; flex-direction: row; some-fo-value: 23em; }
+    .act1 { background-color: #222226; }
+    .act2      { background-color: #5d4d7a }
+    .base      { background-color: #b2b2b2 }
+    .base-dim  { background-color: #545557 }
+    .bg1       { background-color: #292b2e }
+    .bg2       { background-color: #212026 }
+    .bg3       { background-color: #100a14 }
+    .bg4       { background-color: #0a0814 }
+    .border    { background-color: #5d4d7a }
+    .cblk      { background-color: #cbc1d5 }
+    .cblk-bg   { background-color: #2f2b33 }
+    .cblk-ln   { background-color: #827591 }
+    .cblk-ln-bg{ background-color: #373040 }
+    .cursor    { background-color: #e3dedd }
+    .const     { background-color: #a45bad }
+    .comment   { background-color: #2aa1ae }
+    .comment-bg{ background-color: #292e34 }
+    .comp      { background-color: #c56ec3 }
+    .err       { background-color: #e0211d }
+    .func      { background-color: #bc6ec5 }
+    .head1     { background-color: #4f97d7 }
+    .head1-bg  { background-color: #293239 }
+    .head2     { background-color: #2d9574 }
+    .head2-bg  { background-color: #293235 }
+    .head3     { background-color: #67b11d }
+    .head3-bg  { background-color: #293235 }
+    .head4     { background-color: #b1951d }
+    .head4-bg  { background-color: #32322c }
+    .highlight { background-color: #444155 }
+    .keyword   { background-color: #4f97d7 }
+    .lnum      { background-color: #44505c }
+    .mat       { background-color: #86dc2f }
+    .meta      { background-color: #9f8766 }
+    .str       { background-color: #2d9574 }
+    .suc       { background-color: #86dc2f }
+    .ttip      { background-color: #9a9aba }
+    .ttip-sl   { background-color: #5e5079 }
+    .ttip-bg   { background-color: #34323e }
+    .type      { background-color: #ce537a }
+    .var       { background-color: #7590db }
+    .war       { background-color: #dc752f }
+    .aqua      { background-color: #2d9574 }
+    .aqua-bg   { background-color: #293235 }
+    .green     { background-color: #67b11d }
+    .green-bg  { background-color: #293235 }
+    .green-bg-s{ background-color: #29422d }
+    .cyan      { background-color: #28def0 }
+    .red       { background-color: #f2241f }
+    .red-bg    { background-color: #3c2a2c }
+    .red-bg-s  { background-color: #512e31 }
+    .blue      { background-color: #4f97d7 }
+    .blue-bg   { background-color: #293239 }
+    .violet    { background-color: #a31db1 }
+    .yellow    { background-color: #b1951d }
+    .yellow-bg { background-color: #32322c }
