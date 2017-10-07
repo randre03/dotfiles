@@ -1,0 +1,227 @@
+" Type :so % to refresh .vimrc after making changes
+
+" This might help speed up VIM
+let g:ruby_path = system('rvm current')
+set timeoutlen=1000 ttimeoutlen=0
+
+set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
+set history=50
+set autowrite     " Automatically :write before running commands
+" Trigger autoread when changing buffers or coming back to vim in terminal.
+au FocusGained,BufEnter * :silent! !
+
+"Set default font in mac vim and gvim
+set guifont=Fira\ Code:h14
+set cursorline    " highlight the current line
+set visualbell    " stop that ANNOYING beeping
+
+"Allow usage of mouse in iTerm
+set ttyfast
+set mouse=a
+" set ttymouse=xterm2
+
+" Make searching better
+set gdefault      " Never have to type /g at the end of search / replace again
+set hlsearch
+set incsearch
+set showmatch
+set shiftround
+nnoremap <CR> :noh<CR><CR> " Stop highlighting by pressing Enter
+
+" Quickly get a list of buffers
+:nnoremap <F5> :buffers<CR>:buffer<Space>
+
+" Make it obvious where 100 characters is
+set textwidth=100
+" set formatoptions=cq
+set formatoptions=qrn1
+set wrapmargin=0
+set colorcolumn=+1
+
+" Numbers
+set numberwidth=3
+
+" Open new split panes to right and bottom, which feels more natural
+" set splitbelow
+set splitright
+
+" Auto resize Vim splits to active split
+" set winwidth=104
+" set winheight=5
+" set winminheight=5
+" set winheight=999
+
+"HTML Editing
+set matchpairs+=<:>
+
+" Treat <li> and <p> tags like the block tags they are
+let g:html_indent_tags = 'li\|p'
+
+" ================ Scrolling ========================
+
+set sidescrolloff=15
+set sidescroll=1
+
+"Toggle relative numbering, and set to absolute on loss of focus or insert mode
+set rnu
+function! ToggleNumbersOn()
+    set nu!
+    set rnu
+endfunction
+function! ToggleRelativeOn()
+    set rnu!
+    set nu
+endfunction
+autocmd FocusLost * call ToggleRelativeOn()
+autocmd FocusGained * call ToggleRelativeOn()
+autocmd InsertEnter * call ToggleRelativeOn()
+autocmd InsertLeave * call ToggleRelativeOn()
+
+"Below is to fix issues with the ABOVE mappings in quickfix window
+autocmd CmdwinEnter * nnoremap <CR> <CR>
+autocmd BufReadPost quickfix nnoremap <CR> <CR>
+
+" Quicker window movement
+" <c-h> is interpreted as <bs> in neovim
+" This is a bandaid fix until the team decides how
+" they want to handle fixing it...(https://github.com/neovim/neovim/issues/2048)
+nnoremap <silent> <bs> :TmuxNavigateLeft<cr>
+
+" Navigate properly when lines are wrapped
+nnoremap j gj
+nnoremap k gk
+
+" Make using : faster
+nnoremap ; :
+nnoremap : ;
+vnoremap ; :
+vnoremap : ;
+
+" Set spellfile to location that is guaranteed to exist, can be symlinked to
+" Dropbox or kept in Git and managed outside of thoughtbot/dotfiles using rcm.
+set spellfile=$HOME/.vim-spell-en.utf-8.add
+
+" Always use vertical diffs
+set diffopt+=vertical
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
+  syntax on
+endif
+
+" Syntax Highlight with Syntastic
+map <Leader>s :SyntasticToggleMode<CR>
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+""" SYSTEM CLIPBOARD COPY & PASTE SUPPORT
+set pastetoggle=<F2> "F2 before pasting to preserve indentation
+"Copy paste to/from clipboard
+vnoremap <C-c> "*y
+map <silent><Leader>p :set paste<CR>o<esc>"*]p:set nopaste<cr>"
+map <silent><Leader><S-p> :set paste<CR>O<esc>"*]p:set nopaste<cr>"
+
+""" MORE AWESOME HOTKEYS
+
+" Ag will search from project root
+let g:ag_working_path_mode="r"
+
+"Map Ctrl + S to save in any mode
+" noremap <silent> <C-S>          :update<CR>
+" vnoremap <silent> <C-S>         <C-C>:update<CR>
+" inoremap <silent> <C-S>         <C-O>:update<CR>
+" Also map leader + s
+" map <leader>s <C-S>
+
+" AUTOCOMMANDS - Do stuff
+
+" Save whenever switching windows or leaving vim. This is useful when running
+" the tests inside vim without having to save all files first.
+au FocusLost,WinLeave * :silent! wa
+
+" automatically rebalance windows on vim resize
+autocmd VimResized * :wincmd =
+
+"update dir to current file
+autocmd BufEnter * silent! cd %:p:h
+
+augroup vimrcEx
+  autocmd!
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it for commit messages, when the position is invalid, or when
+  " inside an event handler (happens when dropping a file on gvim).
+  autocmd BufReadPost *
+    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
+  " Set syntax highlighting for specific file types
+  autocmd BufRead,BufNewFile *.md set filetype=markdown
+
+  " autocmd BufRead *.jsx set ft=jsx.html
+  " autocmd BufNewFile *.jsx set ft=jsx.html
+
+  " Enable spellchecking for Markdown
+  autocmd FileType markdown setlocal spell
+
+  " Automatically wrap at 100 characters for Markdown
+  autocmd BufRead,BufNewFile *.md setlocal textwidth=100
+
+  " Automatically wrap at 100 characters and spell check git commit messages
+  autocmd FileType gitcommit setlocal textwidth=100
+  autocmd FileType gitcommit setlocal spell
+
+  " Allow stylesheets to autocomplete hyphenated words
+  autocmd FileType css,scss,sass,less setlocal iskeyword+=-
+augroup END
+
+" SPECIFIC LANGUAGE SETTINGS
+" ************************************************
+
+" HASKELL
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
+
+" CLOJURE
+au Filetype clojure nmap <c-c><c-K> :Require<cr>
+
+" ***********************************************
+
+" keyboard shortcuts
+inoremap fd <ESC>
+
+" gui settings
+if (&t_Co == 256 || has('gui_running'))
+  if ($TERM_PROGRAM == 'iTerm.app')
+    colorscheme solarized
+  else
+    colorscheme desert
+  endif
+endif
+
+" Disambiguate ,a & ,t from the Align plugin, making them fast again.
+"
+" This section is here to prevent AlignMaps from adding a bunch of mappings
+" that interfere with the very-common ,a and ,t mappings. This will get run
+" at every startup to remove the AlignMaps for the *next* vim startup.
+"
+" If you do want the AlignMaps mappings, remove this section, remove
+" ~/.vim/bundle/Align, and re-run rake in maximum-awesome.
+function! s:RemoveConflictingAlignMaps()
+  if exists("g:loaded_AlignMapsPlugin")
+    AlignMapsClean
+  endif
+endfunction
+command! -nargs=0 RemoveConflictingAlignMaps call s:RemoveConflictingAlignMaps()
+silent! autocmd VimEnter * RemoveConflictingAlignMaps
