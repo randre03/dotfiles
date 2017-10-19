@@ -31,33 +31,31 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     clojure
-     ivy
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t)
      better-defaults
+     elixir
      emacs-lisp
      git
-     ;; markdown
-     ;; org
-     osx
-     parinfer
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
+     ibuffer
+     ivy
+     (markdown :variables
+               markdown-live-preview-engine 'vmd)
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom
+            shell-default-term-shell "/bin/zsh")
      syntax-checking
-     version-control
+     (version-control :variables
+                      version-control-diff-tool 'diff-hl
+                      version-control-diff-side 'right
+                      version-control-global-margin t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(evil-goggles)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -130,14 +128,15 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(solarized-light
+                         spacemacs-light
                          spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   ;; dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Source Code Pro"
                                :size 13
-                               :weight normal
+                               :weight semi-light
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
@@ -146,7 +145,7 @@ values."
    ;; (default "SPC")
    dotspacemacs-emacs-command-key "SPC"
    ;; The key used for Vim Ex commands (default ":")
-   dotspacemacs-ex-command-key ":"
+   dotspacemacs-ex-command-key ";"
    ;; The leader key accessible in `emacs state' and `insert state'
    ;; (default "M-m")
    dotspacemacs-emacs-leader-key "M-m"
@@ -170,7 +169,7 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    ;; If non-nil, J and K move lines up and down when in visual mode.
    ;; (default nil)
-   dotspacemacs-visual-line-move-text nil
+   dotspacemacs-visual-line-move-text t
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
@@ -238,7 +237,7 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 30
    ;; If non nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
    ;; If non nil show the color guide hint for transient state keys. (default t)
@@ -262,7 +261,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers 'relative
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -272,29 +271,56 @@ values."
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
+   dotspacemacs-smart-closing-parenthesis nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
    dotspacemacs-default-package-repository nil
+   ;; Format specification for setting the frame title.
+   ;; %a - the `abbreviated-file-name', or `buffer-name'
+   ;; %t - `projectile-project-name'
+   ;; %I - `invocation-name'
+   ;; %S - `system-name'
+   ;; %U - contents of $USER
+   ;; %b - buffer name
+   ;; %f - visited file name
+   ;; %F - frame name
+   ;; %s - process status
+   ;; %p - percent of buffer above top of window, or Top, Bot or All
+   ;; %P - percent of buffer above bottom of window, perhaps plus Top, or Bot or All
+   ;; %m - mode name
+   ;; %n - Narrow if appropriate
+   ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
+   ;; %Z - like %z, but including the end-of-line format
+   ;; (default "%I@%S")
+   dotspacemacs-frame-title-format "%f | %m %n"
+   ;; Format specification for setting the icon title format
+   ;; (default nil - same as frame-title-format)
+   dotspacemacs-icon-title-format nil
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
-   ;; `trailing' to delete only the whitespace at end of lines, `changed'to
+   ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
-   )
+   dotspacemacs-whitespace-cleanup 'all
+   ;; Either nil or a number of seconds. If non-nil zone out after the specified
+   ;; number of seconds. (default nil)
+   dotspacemacs-zone-out-when-idle nil
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs t))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -303,7 +329,13 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  )
+
+  ;; Start daemon at beginning to allow emacsclient
+  (load "server")
+  (unless (server-running-p) (server-start))
+
+  ;; Default Directory
+  (setq default-directory "~/Dropbox/Link_to_dev"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -312,7 +344,225 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  )
+
+  ;; Set emacs path based on PATH from my shell
+  ;; 'exec-path-from-shell' is already installed by Spacemacs
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+
+  (setq powerline-default-separator 'utf-8)
+
+  ;; Enable Evil Goggles
+  (evil-goggles-mode)
+
+  ;; Config - Personal
+  (setq user-full-name "Roger E. Randall, II"
+        user-mail-address "roger.randall@gmail.com")
+
+  ;; Disk space is cheap...save backups
+  (setq backup-directory-alist "~/.emacs.d/backups")
+  (setq delete-old-versions -1)
+  (setq version-control t)
+  (setq vc-make-backup-files t)
+
+  ;;http://emacsredux.com/blog/2015/05/09/emacs-on-os-x/
+  (setq insert-directory-program (executable-find "gls"))
+
+  ;; Allows Paradox to show number of stars packages have. DO NOT SHARE NUMBER
+  (setq paradox-github-token '740d11f134624f7ea8483a2d6c95e651643f7a64)
+
+  ;; Make TAB Complete without losing ability to indent
+  (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+  ;; Replace return key with newline-and-indent when in cider mode.
+  (add-hook 'cider-mode-hook '(lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
+
+  ;; Config - Spacemacs' SPC-o keybinding
+  (evil-leader/set-key "oi" 'magit-init)
+  (evil-leader/set-key "ow" 'toggle-window-split) ; See definition below
+
+  ;; Switch : and ; && Switch j and k with jk and kj
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+
+  (setq delete-by-moving-to-trash t)    ; send deleted files to OSX trash
+  ;; Integrate diff-hl with Magit
+  ;; Diff-hl graphically shows updated lines compared to most recent git commit
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;; USER-DEFINED FUNCTIONS
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  ;; TOGGLE WINDOW SPLIT
+  ;; http://emacswiki.org/emacs/ToggleWindowSplit
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1)))))))
+
+  ;; As of Oct 18, 2017 Hydra is not working. Saved here in case it begins working again.
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;; USER-DEFINED HYDRAS
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; HYDRA - dired
+;; (defhydra hydra-dired (:hint nil :color pink)
+;;   "
+;; _+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
+;; _C_opy             _O_ view other   _U_nmark all       _)_ omit-mode      _$_ hide-subdir    C-x C-q : edit
+;; _D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
+;; _R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
+;; _Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
+;; _S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra   \\ flyspell
+;; _r_sync            ^ ^              ^ ^                ^ ^                _?_ summary
+;; _z_ compress-file  _A_ find regexp
+;; _Z_ compress       _Q_ repl regexp
+
+;; T - tag prefix
+;; "
+;;   ("\\" dired-do-ispell)
+;;   ("(" dired-hide-details-mode)
+;;   (")" dired-omit-mode)
+;;   ("+" dired-create-directory)
+;;   ("=" diredp-ediff)         ;; smart diff
+;;   ("?" dired-summary)
+;;   ("$" diredp-hide-subdir-nomove)
+;;   ("A" dired-do-find-regexp)
+;;   ("C" dired-do-copy)        ;; Copy all marked files
+;;   ("D" dired-do-delete)
+;;   ("E" dired-mark-extension)
+;;   ("e" dired-ediff-files)
+;;   ("F" dired-do-find-marked-files)
+;;   ("G" dired-do-chgrp)
+;;   ("g" revert-buffer)        ;; read all directories again (refresh)
+;;   ("i" dired-maybe-insert-subdir)
+;;   ("l" dired-do-redisplay)   ;; relist the marked or singel directory
+;;   ("M" dired-do-chmod)
+;;   ("m" dired-mark)
+;;   ("O" dired-display-file)
+;;   ("o" dired-find-file-other-window)
+;;   ("Q" dired-do-find-regexp-and-replace)
+;;   ("R" dired-do-rename)
+;;   ("r" dired-do-rsynch)
+;;   ("S" dired-do-symlink)
+;;   ("s" dired-sort-toggle-or-edit)
+;;   ("t" dired-toggle-marks)
+;;   ("U" dired-unmark-all-marks)
+;;   ("u" dired-unmark)
+;;   ("v" dired-view-file)      ;; q to exit, s to search, = gets line #
+;;   ("w" dired-kill-subdir)
+;;   ("Y" dired-do-relsymlink)
+;;   ("z" diredp-compress-this-file)
+;;   ("Z" dired-do-compress)
+;;   ("q" nil)
+;;   ("." nil :color blue))
+
+;; (define-key dired-mode-map "." 'hydra-dired/body)
+
+;; ;; HYDRA - iBuffer
+;; (defhydra hydra-ibuffer-main (:color pink :hint nil)
+;;   "
+;; ^Mark^         ^Actions^         ^View^          ^Select^              ^Navigation^
+;; _m_: mark      _D_: delete       _g_: refresh    _q_: quit             _k_:   ↑    _h_
+;; _u_: unmark    _s_: save marked  _S_: sort       _TAB_: toggle         _RET_: visit
+;; _*_: specific  _a_: all actions  _/_: filter     _o_: other window     _j_:   ↓    _l_
+;; _t_: toggle    _._: toggle hydra _H_: help       C-o other win no-select
+;; "
+;;   ("m" ibuffer-mark-forward)
+;;   ("u" ibuffer-unmark-forward)
+;;   ("*" hydra-ibuffer-mark/body :color blue)
+;;   ("t" ibuffer-toggle-marks)
+
+;;   ("D" ibuffer-do-delete)
+;;   ("s" ibuffer-do-save)
+;;   ("a" hydra-ibuffer-action/body :color blue)
+
+;;   ("g" ibuffer-update)
+;;   ("S" hydra-ibuffer-sort/body :color blue)
+;;   ("/" hydra-ibuffer-filter/body :color blue)
+;;   ("H" describe-mode :color blue)
+
+;;   ("h" ibuffer-backward-filter-group)
+;;   ("k" ibuffer-backward-line)
+;;   ("l" ibuffer-forward-filter-group)
+;;   ("j" ibuffer-forward-line)
+;;   ("RET" ibuffer-visit-buffer :color blue)
+
+;;   ("TAB" ibuffer-toggle-filter-group)
+
+;;   ("o" ibuffer-visit-buffer-other-window :color blue)
+;;   ("q" quit-window :color blue)
+;;   ("." nil :color blue))
+;; (define-key ibuffer-mode-map "." 'hydra-ibuffer-main/body)
+
+
+;; ;; HYDRA - buffer switching
+;; (defun my/name-of-buffers (n)
+;;   "Return the names of the first N buffers from `buffer-list'."
+;;   (let ((bns
+;;          (delq nil
+;;                (mapcar
+;;                 (lambda (b)
+;;                   (unless (string-match "^ " (setq b (buffer-name b)))
+;;                     b))
+;;                 (buffer-list)))))
+;;     (subseq bns 1 (min (1+ n) (length bns)))))
+
+;; ;; Given ("a", "b", "c"), return "1. a, 2. b, 3. c".
+;; (defun my/number-names (list)
+;;   "Enumerate and concatenate LIST."
+;;   (let ((i 0))
+;;     (mapconcat
+;;      (lambda (x)
+;;        (format "%d. %s" (cl-incf i) x))
+;;      list
+;;      ", ")))
+
+;; (defvar my/last-buffers nil)
+
+;; (defun my/switch-to-buffer (arg)
+;;   (interactive "p")
+;;   (switch-to-buffer
+;;    (nth (1- arg) my/last-buffers)))
+
+;; (defun my/switch-to-buffer-other-window (arg)
+;;   (interactive "p")
+;;   (switch-to-buffer-other-window
+;;    (nth (1- arg) my/last-buffers)))
+
+;; (global-set-key
+;;  "\C-o"
+;;  (defhydra my/switch-to-buffer (:exit t
+;;                                       :body-pre (setq my/last-buffers
+;;                                                       (my/name-of-buffers 4)))
+;;    "
+;; _o_ther buffers: %s(my/number-names my/last-buffers)
+
+;; "
+;;    ("o" my/switch-to-buffer "this window")
+;;    ("O" my/switch-to-buffer-other-window "other window")
+;;    ("<escape>" nil))
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -323,8 +573,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl unfill smeargle orgit mwim magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor diff-hl company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy)))
- '(tramp-syntax (quote default) nil (tramp)))
+    (helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line xterm-color ws-butler winum which-key wgrep volatile-highlights vmd-mode vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smex smeargle shell-pop restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file ob-elixir neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flycheck-pos-tip flycheck-mix flycheck-credo flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav dumb-jump diff-hl define-word counsel-projectile company-statistics column-enforce-mode clean-aindent-mode auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -341,11 +590,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (parinfer sayid clojure-snippets clj-refactor inflections edn multiple-cursors paredit peg cider-eval-sexp-fu cider queue clojure-mode reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl unfill smeargle orgit mwim magit-gitflow gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter fuzzy flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor diff-hl company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f dash s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy)))
- '(tramp-syntax (quote default) nil (tramp)))
+    (helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line xterm-color ws-butler winum which-key wgrep volatile-highlights vmd-mode vi-tilde-fringe uuidgen use-package unfill toc-org symon string-inflection spaceline solarized-theme smex smeargle shell-pop restart-emacs request rainbow-delimiters popwin persp-mode pcre2el password-generator paradox org-bullets open-junk-file ob-elixir neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum linum-relative link-hint ivy-purpose ivy-hydra info+ indent-guide ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flycheck-pos-tip flycheck-mix flycheck-credo flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump diff-hl define-word counsel-projectile company-statistics column-enforce-mode clean-aindent-mode browse-at-remote auto-yasnippet auto-highlight-symbol auto-compile alchemist aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
